@@ -1,9 +1,8 @@
 <template>
   <div class="flex">
-    <!-- <MonacoEditorWrapper/> -->
-    <MonacoEditor :language="'html'"/>
-    <MonacoEditor :language="'css'"/>
-    <MonacoEditor :language="'javascript'"/>
+    <Editor :language="'html'"/>
+    <Editor :language="'css'"/>
+    <Editor :language="'javascript'"/>
   </div>
   <MonacoPreview/>
   <ConsolePreview/>
@@ -12,11 +11,9 @@
 <script setup>
 import { provide, ref } from 'vue';
 
-import MonacoEditor from './components/MonacoEditor.vue'
+import Editor from './components/Editor.vue'
 import MonacoPreview from './components/MonacoPreview.vue';
 import ConsolePreview from './components/ConsolePreview.vue';
-
-// import MonacoEditorWrapper from './components/MonacoEditorWrapper.vue';
 
 provide('code', {
   html: ref(''),
