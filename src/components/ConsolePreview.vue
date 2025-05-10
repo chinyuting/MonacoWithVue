@@ -1,7 +1,7 @@
 <template>
   <div class="editor-wrapper">
     <div>
-      <button @click="runCode">執行程式</button>
+      <button @click="executeCode">執行程式</button>
       <button @click="resetConsole">重整</button>
     </div>
     <h3>Console 輸出</h3>
@@ -12,16 +12,24 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
+
+// debounce 工具函式
+function debounce(fn, delay = 1000) {
+  let timer
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), delay)
+  }
+}
 
 const code = inject('code')
-const jsCode = ref(code.javascript.value)
-
 const logs = ref([])
 
-const runCode = () => {
+// 執行程式邏輯
+const executeCode = () => {
 
-  const userCode = code.javascript.value // 這是從其他 component 傳進來的 JS 程式碼字串
+  const userCode = code.javascript.value
 
   const customConsole = {
     log: (...args) => {
@@ -37,7 +45,13 @@ const runCode = () => {
   }
 }
 
-const resetConsole = ()=>{
+// 包一層 debounce
+const debouncedExecute = debounce(executeCode, 600)
+
+// 監聽 JS 程式碼變化
+watch(() => code.javascript.value, debouncedExecute)
+
+const resetConsole = () => {
   logs.value = []
 }
 </script>
@@ -59,5 +73,6 @@ const resetConsole = ()=>{
   border: 1px solid #ccc;
   padding: 1rem;
   min-height: 100px;
+text-align: left;
 }
 </style>
