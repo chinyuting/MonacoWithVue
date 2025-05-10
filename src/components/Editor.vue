@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>{{ language }}</h1>
+    <p>{{ language }}</p>
     <div class="editor-wrapper">
       <MonacoEditor
         v-model:value="code"
@@ -22,6 +22,7 @@ const props = defineProps({
     required: true
   }
 })
+
 const codeForEditor = inject('code')
 
 const code = ref(codeForEditor[props.language]);
@@ -29,6 +30,9 @@ const language = ref(props.language);
 const theme = ref('vs-dark');
 const editorOptions = ref({
   automaticLayout: true,
+  scrollbar: {
+    scrollDuration: 0 // 減少滾動動畫
+  },
   fontSize: 14,
   tabSize: 2,
   minimap: { enabled: true },
@@ -36,9 +40,10 @@ const editorOptions = ref({
   roundedSelection: false,
   renderLineHighlight: 'all',
   cursorBlinking: 'blink',
-  wordWrap: 'on'
+  wordWrap: 'on',
+  hover: true,
+  parameterHints: { enabled: true },
 });
-
 </script>
 
 <style>
@@ -49,9 +54,16 @@ const editorOptions = ref({
 
 .editor-wrapper {
   width: 100%;
-  height: 500px;
+  height: 200px;
   border: 1px solid transparent;
-  /* margin-bottom: 20px; */
+}
+
+.editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .controls {
